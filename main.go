@@ -10,7 +10,9 @@ import (
 )
 
 // I wrote this for the DHT11 model, but other hardware may be compatible
-const sensorType = dht.DHT11
+const (
+    sensorType = dht.DHT11
+)
 
 func main() {
 
@@ -27,6 +29,7 @@ Loop:
 		case msg := <-rtm.IncomingEvents:
 			fmt.Println("Event received: ")
 			switch ev := msg.Data.(type) {
+
 			case *slack.ConnectedEvent:
 				fmt.Println("Connection counter:", ev.ConnectionCount)
 
@@ -58,13 +61,13 @@ func respond(rtm *slack.RTM, msg *slack.MessageEvent, prefix string) {
 	rtm.SendMessage(rtm.NewOutgoingMessage("Checking temp", msg.Channel))
 
 	var msgTxt string 
-	temp, humid, err := <-getTemp()
+	temp, humid, err := getTemp()
 
 	if err != nil {
 		fmt.Println(err)
-		msgTxt = fmt.Sprint("Error occurred: %s", err)
+		msgTxt = fmt.Sprintf("Error occurred: %s", err)
 	} else {
-		msgTxt = fmt.Sprint("Temperature: %vC, Humidity: %v %%", temp, humid) //TODO: Add degree sign
+		msgTxt = fmt.Sprintf("Temperature: %vC, Humidity: %v %%", temp, humid) //TODO: Add degree sign
 	}
 
 	rtm.SendMessage(rtm.NewOutgoingMessage(msgTxt, msg.Channel))
