@@ -57,7 +57,7 @@ Loop:
 func respond(rtm *slack.RTM, msg *slack.MessageEvent, prefix string) {
 	rtm.SendMessage(rtm.NewOutgoingMessage("Checking temp", msg.Channel))
 
-	var string msgTxt
+	var msgTxt string 
 	temp, humid, err := <-getTemp()
 
 	if err != nil {
@@ -71,7 +71,7 @@ func respond(rtm *slack.RTM, msg *slack.MessageEvent, prefix string) {
 }
 
 // Gets temp and humidity from DHT11 sensor
-func getTemp() (float, float, error) {
+func getTemp() (float32, float32, error) {
 	temp, humid, _, err := dht.ReadDHTxxWithRetry(sensorType, 4, false, 5)
 	if err != nil {
 		fmt.Println(err)
