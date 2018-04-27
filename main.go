@@ -9,6 +9,7 @@ import (
 	"github.com/nlopes/slack"
 )
 
+// I wrote this for the DHT11 model, but other hardware may be compatible
 const sensorType = dht.DHT11
 
 func main() {
@@ -52,13 +53,24 @@ Loop:
 	}
 }
 
+// Responds to request for temp and humidity value in slack
 func respond(rtm *slack.RTM, msg *slack.MessageEvent, prefix string) {
 	rtm.SendMessage(rtm.NewOutgoingMessage("Checking temp", msg.Channel))
 
+	var string msgTxt
 	temp, humid, err := <-getTemp()
 
+	if err != nil {
+		fmt.Println(err)
+		msgTxt = fmt.Sprint("Error occurred: %s", err)
+	} else {
+		msgTxt = fmt.Sprint("Temperature: %vC, Humidity: %v %%", temp, humid) //TODO: Add degree sign
+	}
+
+	rtm.SendMessage(rtm.NewOutgoingMessage(msgTxt, msg.Channel))
 }
 
+// Gets temp and humidity from DHT11 sensor
 func getTemp() (float, float, error) {
 	temp, humid, _, err := dht.ReadDHTxxWithRetry(sensorType, 4, false, 5)
 	if err != nil {
