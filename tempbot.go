@@ -67,6 +67,7 @@ func respond(rtm *slack.RTM, msg *slack.MessageEvent, prefix string) {
 		fmt.Println(err)
 		msgTxt = fmt.Sprintf("Error occurred: %s", err)
 	} else {
+		//TODO: Find way to safely remove space between % sign and value for humidity
 		msgTxt = fmt.Sprintf("Temperature: %v \u00B0C, Humidity: %v %%", temp, humid)
 	}
 
