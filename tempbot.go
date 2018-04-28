@@ -67,7 +67,7 @@ func respond(rtm *slack.RTM, msg *slack.MessageEvent, prefix string) {
 		fmt.Println(err)
 		msgTxt = fmt.Sprintf("Error occurred: %s", err)
 	} else {
-		msgTxt = fmt.Sprintf("Temperature: %v\u00B0C, Humidity: %v%%", temp, humid)
+		msgTxt = fmt.Sprintf("Temperature: %v \u00B0C, Humidity: %v %%", temp, humid)
 	}
 
 	rtm.SendMessage(rtm.NewOutgoingMessage(msgTxt, msg.Channel))
